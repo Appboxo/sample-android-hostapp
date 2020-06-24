@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 29
@@ -15,7 +16,14 @@ android {
     }
 
     buildTypes {
+        def Properties properties = new Properties()
+        properties.load(project.rootProject.file("local.properties").newDataInputStream())
+
+        debug {
+            buildConfigField "String", "APPBOXO_CLIENT_ID", "\"${properties.getProperty("appboxo.client.id", "")}\""
+        }
         release {
+            buildConfigField "String", "APPBOXO_CLIENT_ID", "\"${properties.getProperty("appboxo.client.id", "")}\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -29,6 +37,8 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+
+    implementation 'com.google.firebase:firebase-messaging:20.2.1'
 
     implementation 'com.appboxo:sdk:1.3.14'
 }

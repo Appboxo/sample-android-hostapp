@@ -11,7 +11,7 @@ class App : Application() {
         Appboxo.init(this)
             .setConfig(
                 Config.Builder()
-                    .setClientId("YOUR_CLIENT_ID")
+                    .setClientId(BuildConfig.APPBOXO_CLIENT_ID)
                     .build()
             )
             .setLogger(DefaultLogger(BuildConfig.DEBUG))

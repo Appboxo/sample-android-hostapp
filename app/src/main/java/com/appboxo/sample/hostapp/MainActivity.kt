@@ -1,9 +1,13 @@
 package com.appboxo.sample.hostapp
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.appboxo.sdk.Appboxo
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -34,5 +38,27 @@ class MainActivity : AppCompatActivity() {
             Appboxo.getMiniApp("app85076", "YOUR_AUTH_PAYLOAD").open(this)
         }
 
+        checkPush(intent)
+
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) return@OnCompleteListener
+                val token = task.result?.token
+                Log.d("TOKEN", token)
+            })
     }
+
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        checkPush(intent)
+    }
+
+    private fun checkPush(intent: Intent) {
+        val appId = intent.getStringExtra("miniapp_id") ?: ""
+        if (appId.isNotBlank()) {
+            Appboxo.getMiniApp(appId, "YOUR_AUTH_PAYLOAD").open(this)
+        }
+    }
+
 }
