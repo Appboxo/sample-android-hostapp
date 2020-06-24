@@ -13,9 +13,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         demo.setOnClickListener {
-            val demoApp = Appboxo.createMiniApp("app16973", "YOUR_PAYLOAD")
-            demoApp.setCustomEventListener { activity, miniApp, customEvent ->
-                AlertDialog.Builder(activity)
+            Appboxo.getMiniApp("app16973", "YOUR_AUTH_PAYLOAD")
+                .setCustomEventListener { activity, miniApp, customEvent ->
+                    AlertDialog.Builder(activity)
                         .setMessage(customEvent.payload.toString())
                         .setOnCancelListener {
                             customEvent.errorType = "custom_error"
@@ -26,12 +26,12 @@ class MainActivity : AppCompatActivity() {
                             miniApp.sendEvent(customEvent)
                         }
                         .show()
-            }
-            demoApp.open(this)
+                }
+                .open(this)
         }
 
         skyscanner.setOnClickListener {
-            Appboxo.createMiniApp("id1", "YOUR_PAYLOAD").open(this)
+            Appboxo.getMiniApp("app85076", "YOUR_AUTH_PAYLOAD").open(this)
         }
 
     }
