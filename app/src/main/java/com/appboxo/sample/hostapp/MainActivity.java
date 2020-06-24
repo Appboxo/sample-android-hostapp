@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        MiniApp demo = Appboxo.INSTANCE.createMiniApp("app16973", "YOUR_PAYLOAD");
+                        MiniApp demo = Appboxo.INSTANCE.getMiniApp("app16973", "YOUR_PAYLOAD");
                         demo.setCustomEventListener(new MiniApp.CustomEventListener() {
                             @Override
                             public void handle(@NotNull Activity activity, @NotNull final MiniApp miniApp, @NotNull final CustomEvent customEvent) {
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Appboxo.INSTANCE.createMiniApp("id1", "YOUR_PAYLOAD").open(MainActivity.this);
+                        Appboxo.INSTANCE.getMiniApp("app85076", "YOUR_PAYLOAD").open(MainActivity.this);
                     }
                 });
     }
