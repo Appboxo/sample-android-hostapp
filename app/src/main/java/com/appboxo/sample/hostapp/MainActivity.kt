@@ -38,6 +38,25 @@ class MainActivity : AppCompatActivity() {
             Appboxo.getMiniApp("app85076", "YOUR_AUTH_PAYLOAD").open(this)
         }
 
+        appboxo_store.setOnClickListener {
+            Appboxo.getMiniApp("app36902", "YOUR_AUTH_PAYLOAD")
+                .setCustomEventListener { activity, miniApp, customEvent ->
+                    val price = customEvent.payload["price"] as Int
+                    val name = customEvent.payload["name"] as String
+                    val currency = customEvent.payload["currency"] as String
+                    StripeDialog(activity, price, currency, name).apply {
+                        doOnSuccess = {
+                            customEvent.payload = mapOf("payment" to "received")
+                            miniApp.sendEvent(customEvent)
+                        }
+                        activity.doOnActivityResult { requestCode, resultCode, data ->
+                            this.onActivityResult(requestCode, resultCode, data)
+                        }
+                    }.show()
+                }
+                .open(this)
+        }
+
         checkPush(intent)
 
         FirebaseInstanceId.getInstance().instanceId
