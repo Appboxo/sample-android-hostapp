@@ -86,7 +86,31 @@ miniApp.setCustomEventListener(new MiniApp.CustomEventListener() {
 miniApp.open(this);
 ```
 Use *miniAppActivity* to launch dialogs and activities. 
-Use miniAppActivity.doOnActivityResult { requestCode, resultCode, data -> ...} to handle ActivityResult.     
+Use miniAppActivity.doOnActivityResult { requestCode, resultCode, data -> ...} to handle ActivityResult.    
+
+**Handle miniapp lifecycle**
+```kotlin
+miniapp.setLifecycleListener(object : MiniApp.LifecycleListener {
+                    override fun onLaunch(miniApp: MiniApp) {
+                        //Called when the miniapp will launch with Appboxo.open(...)
+                    }
+
+                    override fun onResume(miniApp: MiniApp) {
+                        //Called when the miniapp will start interacting with the user
+                    }
+
+                    override fun onPause(miniApp: MiniApp) {
+                        //Called when the miniapp loses foreground state
+                    }
+
+                    override fun onClose(miniApp: MiniApp) {
+                        //Called when clicked close button in miniapp or when destroyed miniapp activity
+                    }
+
+                    override fun onError(miniApp: MiniApp, message: String) {
+                    }
+                })
+``` 
 
 **To hide all the miniapps**
 This method minimizes all opened miniapps.  

@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.appboxo.sdk.Appboxo
+import com.appboxo.sdk.MiniApp
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_main.*
@@ -35,7 +36,28 @@ class MainActivity : AppCompatActivity() {
         }
 
         skyscanner.setOnClickListener {
-            Appboxo.getMiniApp("app85076", "YOUR_AUTH_PAYLOAD").open(this)
+            Appboxo.getMiniApp("app85076", "YOUR_AUTH_PAYLOAD")
+                .setLifecycleListener(object : MiniApp.LifecycleListener {
+                    override fun onLaunch(miniApp: MiniApp) {
+                        //Called when the miniapp will launch with Appboxo.open(...)
+                    }
+
+                    override fun onResume(miniApp: MiniApp) {
+                        //Called when the miniapp will start interacting with the user
+                    }
+
+                    override fun onPause(miniApp: MiniApp) {
+                        //Called when the miniapp loses foreground state
+                    }
+
+                    override fun onClose(miniApp: MiniApp) {
+                        //Called when clicked close button in miniapp or when destroyed miniapp activity
+                    }
+
+                    override fun onError(miniApp: MiniApp, message: String) {
+                    }
+                })
+                .open(this)
         }
 
         appboxo_store.setOnClickListener {
@@ -67,6 +89,9 @@ class MainActivity : AppCompatActivity() {
             })
     }
 
+    override fun onResume() {
+        super.onResume()
+    }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
