@@ -61,7 +61,34 @@ public class MainActivity extends AppCompatActivity {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Appboxo.INSTANCE.getMiniApp("app85076", "YOUR_PAYLOAD").open(MainActivity.this);
+                        Appboxo.INSTANCE.getMiniApp("app85076", "YOUR_PAYLOAD")
+                                .setLifecycleListener(new MiniApp.LifecycleListener() {
+                                    @Override
+                                    public void onLaunch(@NotNull MiniApp miniApp) {
+
+                                    }
+
+                                    @Override
+                                    public void onResume(@NotNull MiniApp miniApp) {
+
+                                    }
+
+                                    @Override
+                                    public void onPause(@NotNull MiniApp miniApp) {
+
+                                    }
+
+                                    @Override
+                                    public void onClose(@NotNull MiniApp miniApp) {
+
+                                    }
+
+                                    @Override
+                                    public void onError(@NotNull MiniApp miniApp, @NotNull String s) {
+
+                                    }
+                                })
+                                .open(MainActivity.this);
                     }
                 });
     }
