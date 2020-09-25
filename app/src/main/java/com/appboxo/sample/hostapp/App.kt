@@ -12,6 +12,8 @@ class App : Application() {
             .setConfig(
                 Config.Builder()
                     .setClientId(BuildConfig.APPBOXO_CLIENT_ID)
+                    .multitaskMode(true)
+                    .setTheme(Config.Theme.SYSTEM)
                     .build()
             )
             .setLogger(DefaultLogger(BuildConfig.DEBUG))
