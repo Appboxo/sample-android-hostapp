@@ -11,7 +11,9 @@ class App : Application() {
         Appboxo.init(this)
             .setConfig(
                 Config.Builder()
-                    .setClientId("YOUR_CLIENT_ID")
+                    .setClientId(BuildConfig.APPBOXO_CLIENT_ID)
+                    .multitaskMode(true)
+                    .setTheme(Config.Theme.SYSTEM)
                     .build()
             )
             .setLogger(DefaultLogger(BuildConfig.DEBUG))

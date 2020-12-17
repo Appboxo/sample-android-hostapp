@@ -1,9 +1,10 @@
 package com.appboxo.sample.hostapp
 
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.appboxo.sdk.Appboxo
+import com.appboxo.sdk.MiniappConfig
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -12,27 +13,33 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        demo.setOnClickListener {
-            val demoApp = Appboxo.createMiniApp("app16973", "YOUR_PAYLOAD")
-            demoApp.setCustomEventListener { activity, miniApp, customEvent ->
-                AlertDialog.Builder(activity)
-                        .setMessage(customEvent.payload.toString())
-                        .setOnCancelListener {
-                            customEvent.errorType = "custom_error"
-                            miniApp.sendEvent(customEvent)
-                        }
-                        .setPositiveButton(android.R.string.ok) { _, _ ->
-                            customEvent.payload = mapOf("custom_data_key" to "custom_data_value")
-                            miniApp.sendEvent(customEvent)
-                        }
-                        .show()
-            }
-            demoApp.open(this)
+        miniappButton.setOnClickListener {
+            Appboxo.getMiniapp("[MINIAPP_ID]", "")
+                .setConfig(
+                    MiniappConfig.Builder()
+                        .setExtraUrlParams(
+                            mapOf(
+                                "extra_param_1" to "test",
+                                "extra_param_2" to "test_2"
+                            )
+                        )
+                        .setCustomActionMenuItem(R.drawable.ic_custom_menu)
+                        .build()
+                )
+                .setUrlChangeListener { appboxoActivity, miniapp, uri ->
+                    Log.e("URL_Path", uri.path)
+                    uri.queryParameterNames.forEach {
+                        Log.e("URL_param", "$it = ${uri.getQueryParameter(it)}")
+                    }
+                    if (uri.path?.contains("/book") == true)
+                        miniapp.showCustomActionMenuItem()
+                    else
+                        miniapp.hideCustomActionMenuItem()
+                }
+                .setCustomActionMenuItemClickListener { appboxoActivity, miniapp ->
+                    CardDialog(appboxoActivity).show()
+                }
+                .open(this)
         }
-
-        skyscanner.setOnClickListener {
-            Appboxo.createMiniApp("id1", "YOUR_PAYLOAD").open(this)
-        }
-
     }
 }

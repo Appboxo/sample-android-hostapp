@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "711244093270",
+    "firebase_url": "https://appboxotesthostapp.firebaseio.com",
+    "project_id": "appboxotesthostapp",
+    "storage_bucket": "appboxotesthostapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:711244093270:android:40906e3bb2aa10a97568f7",
+        "android_client_info": {
+          "package_name": "com.appboxo.sample.hostapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "711244093270-hp62kpguamsqtt997vji4qhc0b7fm6gj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-EdzbAq0Bb7uutsDzZ-RN7lOLwwfj9W0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "711244093270-hp62kpguamsqtt997vji4qhc0b7fm6gj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
