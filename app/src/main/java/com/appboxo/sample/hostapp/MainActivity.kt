@@ -12,9 +12,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        val agodaInfo = AgodaInfo()
         miniappButton.setOnClickListener {
-            Appboxo.getMiniapp("[MINIAPP_ID]", "")
+            Appboxo.getMiniapp("miniapp", "")
                 .setConfig(
                     MiniappConfig.Builder()
                         .setExtraUrlParams(
@@ -27,14 +27,43 @@ class MainActivity : AppCompatActivity() {
                         .build()
                 )
                 .setUrlChangeListener { appboxoActivity, miniapp, uri ->
-                    Log.e("URL_Path", uri.path)
+                    Log.e("path", uri.path)
                     uri.queryParameterNames.forEach {
-                        Log.e("URL_param", "$it = ${uri.getQueryParameter(it)}")
+                        Log.e("param", "$it = ${uri.getQueryParameter(it)}")
                     }
-                    if (uri.path?.contains("/book") == true)
-                        miniapp.showCustomActionMenuItem()
-                    else
-                        miniapp.hideCustomActionMenuItem()
+
+                    with(agodaInfo) {
+                        uri.getQueryParameter("city")?.let { city = it }
+                        uri.getQueryParameter("cid")?.let { cid = it }
+                        uri.getQueryParameter("checkIn")?.let { checkIn = it }
+                        uri.getQueryParameter("checkOut")?.let { checkOut = it }
+                        uri.getQueryParameter("los")?.let { los = it }
+                        uri.getQueryParameter("rooms")?.let { rooms = it }
+                        uri.getQueryParameter("adults")?.let { adults = it }
+                        uri.getQueryParameter("children")?.let { children = it }
+                        uri.getQueryParameter("userId")?.let { userId = it }
+                        uri.getQueryParameter("origin")?.let { origin = it }
+                        uri.getQueryParameter("currencyCode")?.let { currencyCode = it }
+                        uri.getQueryParameter("textToSearch")?.let { textToSearch = it }
+                    }
+                    if (uri.path?.contains("/hotel") == true) {
+                        with(agodaInfo) {
+                            runCatching {
+                                uri.lastPathSegment?.replace(".html", "")
+                                    ?.split("-")?.let {
+                                        cityName = it[0]
+                                        countryCode = it[1]
+                                    }
+                                hotel =
+                                    uri.pathSegments?.toMutableList()?.apply { reverse() }?.get(2)
+                            }
+                        }
+                    }
+                    if (uri.path?.contains("/thankyou") == true) {
+                        agodaInfo.bookingIdUrl = uri.toString()
+                        agodaInfo.bookingId = uri.getQueryParameter("bookingId")
+                    }
+                    println(agodaInfo)
                 }
                 .setCustomActionMenuItemClickListener { appboxoActivity, miniapp ->
                     CardDialog(appboxoActivity).show()
