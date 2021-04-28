@@ -1,8 +1,10 @@
 package com.appboxo.sample.hostapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.appboxo.data.models.MiniappData
 import com.appboxo.sdk.Appboxo
 import com.appboxo.sdk.Config
 import com.appboxo.sdk.Miniapp
@@ -14,7 +16,20 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Appboxo.getMiniapps(object: Appboxo.MiniappListCallback{
+            override fun onFailure(e: Exception) {
 
+            }
+
+            override fun onSuccess(miniapps: List<MiniappData>) {
+                miniapps.forEach {
+                    print(it.appId)
+                    print(it.name)
+                    print(it.logo)
+                    print(it.description)
+                }
+            }
+        })
         demo.setOnClickListener {
             Appboxo.getMiniapp("app16973")
                 .setCustomEventListener { activity, miniapp, customEvent ->
