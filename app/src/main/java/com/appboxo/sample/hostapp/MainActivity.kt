@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        Appboxo.getMiniapps(object: Appboxo.MiniappListCallback{
+        Appboxo.getMiniapps(object : Appboxo.MiniappListCallback {
             override fun onFailure(e: Exception) {
 
             }
@@ -27,11 +27,19 @@ class MainActivity : AppCompatActivity() {
                     print(it.name)
                     print(it.logo)
                     print(it.description)
+                    print(it.category)
                 }
+                Log.e("Demo Miniapp", "Miniapps ${miniapps}")
             }
         })
+        val miniapp = Appboxo.getMiniapp("app16973")
         demo.setOnClickListener {
-            Appboxo.getMiniapp("app16973")
+            miniapp.setConfig(
+                MiniappConfig.Builder()
+                    .setExtraUrlParams(mapOf("customQuery" to "value"))
+                    .setCustomActionMenuItem(R.drawable.ic_site_settings)
+                    .build()
+            )
                 .setCustomEventListener { activity, miniapp, customEvent ->
                     AlertDialog.Builder(activity)
                         .setMessage(customEvent.payload.toString())
@@ -42,8 +50,36 @@ class MainActivity : AppCompatActivity() {
                         .setPositiveButton(android.R.string.ok) { _, _ ->
                             customEvent.payload = mapOf("custom_data_key" to "custom_data_value")
                             miniapp.sendEvent(customEvent)
+                            miniapp.hideCustomActionMenuItem()
                         }
                         .show()
+                }
+                .setLifecycleListener(object : Miniapp.LifecycleListener {
+                    override fun onLaunch(miniapp: Miniapp) {
+                        Log.e("Demo Miniapp", "onLaunch ${miniapp.appId}")
+                    }
+
+                    override fun onResume(miniapp: Miniapp) {
+                        Log.e("Demo Miniapp", "onResume ${miniapp.appId}")
+                        miniapp.showCustomActionMenuItem()
+                    }
+
+                    override fun onPause(miniapp: Miniapp) {
+                        Log.e("Demo Miniapp", "onPause ${miniapp.appId}")
+                    }
+
+                    override fun onClose(miniapp: Miniapp) {
+                        Log.e("Demo Miniapp", "onClose ${miniapp.appId}")
+                    }
+
+                    override fun onError(miniapp: Miniapp, message: String) {
+                    }
+                })
+                .setUrlChangeListener { appboxoActivity, miniapp, uri ->
+                    Log.e(
+                        "Demo Miniapp - ${miniapp.appId}",
+                        "onUrlChangeListener ${uri.toString()}  "
+                    )
                 }
                 .open(this)
         }
