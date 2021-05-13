@@ -23,13 +23,13 @@ class MainActivity : AppCompatActivity() {
 
             override fun onSuccess(miniapps: List<MiniappData>) {
                 miniapps.forEach {
+                    Log.e("Miniapp", "${it.name}-${it.category}")
                     print(it.appId)
                     print(it.name)
                     print(it.logo)
                     print(it.description)
                     print(it.category)
                 }
-                Log.e("Demo Miniapp", "Miniapps ${miniapps}")
             }
         })
         val miniapp = Appboxo.getMiniapp("app16973")
