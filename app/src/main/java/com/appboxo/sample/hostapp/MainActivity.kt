@@ -5,10 +5,7 @@ import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.appboxo.data.models.MiniappData
-import com.appboxo.sdk.Appboxo
-import com.appboxo.sdk.Config
-import com.appboxo.sdk.Miniapp
-import com.appboxo.sdk.MiniappConfig
+import com.appboxo.sdk.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -16,7 +13,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        Appboxo.getMiniapps(object : Appboxo.MiniappListCallback {
+        Appboxo.getMiniapps(object : MiniappListCallback {
             override fun onFailure(e: Exception) {
 
             }
@@ -54,25 +51,25 @@ class MainActivity : AppCompatActivity() {
                         }
                         .show()
                 }
-                .setLifecycleListener(object : Miniapp.LifecycleListener {
-                    override fun onLaunch(miniapp: Miniapp) {
+                .setLifecycleListener(object : BaseMiniapp.LifecycleListener {
+                    override fun onLaunch(miniapp: BaseMiniapp) {
                         Log.e("Demo Miniapp", "onLaunch ${miniapp.appId}")
                     }
 
-                    override fun onResume(miniapp: Miniapp) {
+                    override fun onResume(miniapp: BaseMiniapp) {
                         Log.e("Demo Miniapp", "onResume ${miniapp.appId}")
                         miniapp.showCustomActionMenuItem()
                     }
 
-                    override fun onPause(miniapp: Miniapp) {
+                    override fun onPause(miniapp: BaseMiniapp) {
                         Log.e("Demo Miniapp", "onPause ${miniapp.appId}")
                     }
 
-                    override fun onClose(miniapp: Miniapp) {
+                    override fun onClose(miniapp: BaseMiniapp) {
                         Log.e("Demo Miniapp", "onClose ${miniapp.appId}")
                     }
 
-                    override fun onError(miniapp: Miniapp, message: String) {
+                    override fun onError(miniapp: BaseMiniapp, message: String) {
                     }
                 })
                 .setUrlChangeListener { appboxoActivity, miniapp, uri ->
@@ -86,24 +83,24 @@ class MainActivity : AppCompatActivity() {
 
         skyscanner.setOnClickListener {
             Appboxo.getMiniapp("app85076")
-                .setLifecycleListener(object : Miniapp.LifecycleListener {
-                    override fun onLaunch(miniapp: Miniapp) {
+                .setLifecycleListener(object : BaseMiniapp.LifecycleListener {
+                    override fun onLaunch(miniapp: BaseMiniapp) {
                         //Called when the miniapp will launch with Appboxo.open(...)
                     }
 
-                    override fun onResume(miniapp: Miniapp) {
+                    override fun onResume(miniapp: BaseMiniapp) {
                         //Called when the miniapp will start interacting with the user
                     }
 
-                    override fun onPause(miniapp: Miniapp) {
+                    override fun onPause(miniapp: BaseMiniapp) {
                         //Called when the miniapp loses foreground state
                     }
 
-                    override fun onClose(miniapp: Miniapp) {
+                    override fun onClose(miniapp: BaseMiniapp) {
                         //Called when clicked close button in miniapp or when destroyed miniapp activity
                     }
 
-                    override fun onError(miniapp: Miniapp, message: String) {
+                    override fun onError(miniapp: BaseMiniapp, message: String) {
                     }
                 })
                 .open(this)
