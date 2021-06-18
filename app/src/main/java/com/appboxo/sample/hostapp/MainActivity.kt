@@ -51,25 +51,32 @@ class MainActivity : AppCompatActivity() {
                         }
                         .show()
                 }
-                .setLifecycleListener(object : BaseMiniapp.LifecycleListener {
-                    override fun onLaunch(miniapp: BaseMiniapp) {
+                .setPaymentEventListener { appboxoActivity, miniapp, paymentData ->
+                    //show payment dialog and send result
+                    miniapp.sendPaymentResult(paymentData.apply {
+                        this.status = "success"
+                        this.hostappOrderId = "123456"
+                    })
+                }
+                .setLifecycleListener(object : Miniapp.LifecycleListener {
+                    override fun onLaunch(miniapp: Miniapp) {
                         Log.e("Demo Miniapp", "onLaunch ${miniapp.appId}")
                     }
 
-                    override fun onResume(miniapp: BaseMiniapp) {
+                    override fun onResume(miniapp: Miniapp) {
                         Log.e("Demo Miniapp", "onResume ${miniapp.appId}")
                         miniapp.showCustomActionMenuItem()
                     }
 
-                    override fun onPause(miniapp: BaseMiniapp) {
+                    override fun onPause(miniapp: Miniapp) {
                         Log.e("Demo Miniapp", "onPause ${miniapp.appId}")
                     }
 
-                    override fun onClose(miniapp: BaseMiniapp) {
+                    override fun onClose(miniapp: Miniapp) {
                         Log.e("Demo Miniapp", "onClose ${miniapp.appId}")
                     }
 
-                    override fun onError(miniapp: BaseMiniapp, message: String) {
+                    override fun onError(miniapp: Miniapp, message: String) {
                     }
                 })
                 .setUrlChangeListener { appboxoActivity, miniapp, uri ->
@@ -83,24 +90,24 @@ class MainActivity : AppCompatActivity() {
 
         skyscanner.setOnClickListener {
             Appboxo.getMiniapp("app85076")
-                .setLifecycleListener(object : BaseMiniapp.LifecycleListener {
-                    override fun onLaunch(miniapp: BaseMiniapp) {
+                .setLifecycleListener(object : Miniapp.LifecycleListener {
+                    override fun onLaunch(miniapp: Miniapp) {
                         //Called when the miniapp will launch with Appboxo.open(...)
                     }
 
-                    override fun onResume(miniapp: BaseMiniapp) {
+                    override fun onResume(miniapp: Miniapp) {
                         //Called when the miniapp will start interacting with the user
                     }
 
-                    override fun onPause(miniapp: BaseMiniapp) {
+                    override fun onPause(miniapp: Miniapp) {
                         //Called when the miniapp loses foreground state
                     }
 
-                    override fun onClose(miniapp: BaseMiniapp) {
+                    override fun onClose(miniapp: Miniapp) {
                         //Called when clicked close button in miniapp or when destroyed miniapp activity
                     }
 
-                    override fun onError(miniapp: BaseMiniapp, message: String) {
+                    override fun onError(miniapp: Miniapp, message: String) {
                     }
                 })
                 .open(this)
