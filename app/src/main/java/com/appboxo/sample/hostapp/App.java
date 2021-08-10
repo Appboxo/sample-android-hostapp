@@ -6,6 +6,8 @@ import com.appboxo.log.DefaultLogger;
 import com.appboxo.sdk.Appboxo;
 import com.appboxo.sdk.Config;
 
+import org.koin.android.java.KoinAndroidApplication;
+
 public class App extends Application {
     @Override
     public void onCreate() {

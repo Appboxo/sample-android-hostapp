@@ -1,6 +1,5 @@
 package com.appboxo.sample.hostapp;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
@@ -11,7 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.appboxo.js.params.CustomEvent;
 import com.appboxo.sdk.Appboxo;
-import com.appboxo.sdk.MiniApp;
+import com.appboxo.sdk.Miniapp;
+import com.appboxo.ui.main.AppboxoActivity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -27,16 +27,16 @@ public class MainActivity extends AppCompatActivity {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        MiniApp demo = Appboxo.INSTANCE.getMiniApp("app16973", "YOUR_PAYLOAD");
-                        demo.setCustomEventListener(new MiniApp.CustomEventListener() {
+                        Miniapp demo = Appboxo.INSTANCE.getMiniapp("app16973");
+                        demo.setCustomEventListener(new Miniapp.CustomEventListener() {
                             @Override
-                            public void handle(@NotNull Activity activity, @NotNull final MiniApp miniApp, @NotNull final CustomEvent customEvent) {
+                            public void handle(@NotNull AppboxoActivity activity, @NotNull final Miniapp miniApp, @NotNull final CustomEvent customEvent) {
                                 new AlertDialog.Builder(activity)
-                                        .setMessage(customEvent.payload.toString())
+                                        .setMessage(customEvent.getPayload().toString())
                                         .setOnCancelListener(new DialogInterface.OnCancelListener() {
                                             @Override
                                             public void onCancel(DialogInterface dialog) {
-                                                customEvent.errorType = "custom_error";
+                                                customEvent.setErrorType("custom_error");
                                                 miniApp.sendEvent(customEvent);
                                             }
                                         })
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 Map<String, String> payload = new HashMap<>();
                                                 payload.put("custom_data_key", "custom_data_value");
-                                                customEvent.payload = payload;
+                                                customEvent.setPayload(payload);
                                                 miniApp.sendEvent(customEvent);
                                             }
                                         })
@@ -61,30 +61,30 @@ public class MainActivity extends AppCompatActivity {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Appboxo.INSTANCE.getMiniApp("app85076", "YOUR_PAYLOAD")
-                                .setLifecycleListener(new MiniApp.LifecycleListener() {
+                        Appboxo.INSTANCE.getMiniapp("app85076")
+                                .setLifecycleListener(new Miniapp.LifecycleListener() {
                                     @Override
-                                    public void onLaunch(@NotNull MiniApp miniApp) {
+                                    public void onLaunch(@NotNull Miniapp miniApp) {
 
                                     }
 
                                     @Override
-                                    public void onResume(@NotNull MiniApp miniApp) {
+                                    public void onResume(@NotNull Miniapp miniApp) {
 
                                     }
 
                                     @Override
-                                    public void onPause(@NotNull MiniApp miniApp) {
+                                    public void onPause(@NotNull Miniapp miniApp) {
 
                                     }
 
                                     @Override
-                                    public void onClose(@NotNull MiniApp miniApp) {
+                                    public void onClose(@NotNull Miniapp miniApp) {
 
                                     }
 
                                     @Override
-                                    public void onError(@NotNull MiniApp miniApp, @NotNull String s) {
+                                    public void onError(@NotNull Miniapp miniApp, @NotNull String s) {
 
                                     }
                                 })
