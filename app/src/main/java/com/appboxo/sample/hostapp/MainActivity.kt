@@ -2,11 +2,11 @@ package com.appboxo.sample.hostapp
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.appboxo.data.models.MiniappData
 import com.appboxo.sdk.*
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
         val miniapp = Appboxo.getMiniapp("app16973")
-        demo.setOnClickListener {
+        findViewById<View>(R.id.demo).setOnClickListener {
             miniapp.setConfig(
                 MiniappConfig.Builder()
                     .setExtraUrlParams(mapOf("customQuery" to "value"))
@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
                 .open(this)
         }
 
-        skyscanner.setOnClickListener {
+        findViewById<View>(R.id.skyscanner).setOnClickListener {
             Appboxo.getMiniapp("app85076")
                 .setLifecycleListener(object : Miniapp.LifecycleListener {
                     override fun onLaunch(miniapp: Miniapp) {
