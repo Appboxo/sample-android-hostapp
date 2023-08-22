@@ -68,6 +68,9 @@ class MainActivity : AppCompatActivity() {
                         miniapp.showCustomActionMenuItem()
                     }
 
+                    override fun onUserInteraction(miniapp: Miniapp) {
+                    }
+
                     override fun onPause(miniapp: Miniapp) {
                         Log.e("Demo Miniapp", "onPause ${miniapp.appId}")
                     }
@@ -97,6 +100,9 @@ class MainActivity : AppCompatActivity() {
 
                     override fun onResume(miniapp: Miniapp) {
                         //Called when the miniapp will start interacting with the user
+                    }
+
+                    override fun onUserInteraction(miniapp: Miniapp) {
                     }
 
                     override fun onPause(miniapp: Miniapp) {
