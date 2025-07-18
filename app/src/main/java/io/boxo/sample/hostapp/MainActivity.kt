@@ -40,6 +40,9 @@ class MainActivity : AppCompatActivity() {
                     .setCustomActionMenuItem(R.drawable.ic_site_settings)
                     .build()
             )
+                .setAuthListener { activity, miniapp ->
+                    miniapp.setAuthCode("AUTH_CODE_FROM_BACKEND")
+                }
                 .setCustomEventListener { activity, miniapp, customEvent ->
                     AlertDialog.Builder(activity)
                         .setMessage(customEvent.payload.toString())
