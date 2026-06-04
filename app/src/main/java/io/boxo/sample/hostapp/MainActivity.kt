@@ -32,19 +32,20 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-        val miniapp = Boxo.getMiniapp("app16973")
+
         findViewById<View>(R.id.demo).setOnClickListener {
+            val miniapp = Boxo.getMiniapp("app16973")
             miniapp.setConfig(
                 MiniappConfig.Builder()
                     .setExtraUrlParams(mapOf("customQuery" to "value"))
                     .setCustomActionMenuItem(R.drawable.ic_site_settings)
                     .build()
             )
-                .setAuthListener { activity, miniapp ->
+                .setAuthListener { _, miniapp ->
                     miniapp.setAuthCode("AUTH_CODE_FROM_BACKEND")
                 }
-                .setCustomEventListener { activity, miniapp, customEvent ->
-                    AlertDialog.Builder(activity)
+                .setCustomEventListener { _, miniapp, customEvent ->
+                    AlertDialog.Builder(this)
                         .setMessage(customEvent.payload.toString())
                         .setOnCancelListener {
                             customEvent.errorType = "custom_error"
@@ -57,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                         }
                         .show()
                 }
-                .setPaymentEventListener { boxoActivity, miniapp, paymentData ->
+                .setPaymentEventListener { _, miniapp, paymentData ->
                     //show payment dialog and send result
                     miniapp.sendPaymentResult(paymentData.apply {
                         this.status = "success"
@@ -88,7 +89,7 @@ class MainActivity : AppCompatActivity() {
                     override fun onError(miniapp: Miniapp, message: String) {
                     }
                 })
-                .open(this)
+                .open()
         }
     }
 

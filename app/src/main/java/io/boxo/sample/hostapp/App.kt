@@ -11,7 +11,6 @@ class App : Application() {
             .setConfig(
                 Config.Builder()
                     .setClientId("BOXO_CLIENT_ID")
-                    .multitaskMode(true)
                     .setTheme(Config.Theme.SYSTEM)
                     .build()
             )
