@@ -1,96 +1,113 @@
 package io.boxo.sample.hostapp
 
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
-import io.boxo.data.models.MiniappData
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentActivity
 import io.boxo.sdk.Boxo
-import io.boxo.sdk.Miniapp
 import io.boxo.sdk.MiniappConfig
-import io.boxo.sdk.MiniappListCallback
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        Boxo.getMiniapps(object : MiniappListCallback {
-            override fun onFailure(e: Exception) {
-
-            }
-
-            override fun onSuccess(miniapps: List<MiniappData>) {
-                miniapps.forEach {
-                    Log.e("Miniapp", "${it.name}-${it.category}")
-                    print(it.appId)
-                    print(it.name)
-                    print(it.logo)
-                    print(it.description)
-                    print(it.category)
-                }
-            }
-        })
-
-        findViewById<View>(R.id.demo).setOnClickListener {
-            val miniapp = Boxo.getMiniapp("app16973")
-            miniapp.setConfig(
-                MiniappConfig.Builder()
-                    .setExtraUrlParams(mapOf("customQuery" to "value"))
-                    .setCustomActionMenuItem(R.drawable.ic_site_settings)
-                    .build()
-            )
-                .setAuthListener { _, miniapp ->
-                    miniapp.setAuthCode("AUTH_CODE_FROM_BACKEND")
-                }
-                .setCustomEventListener { _, miniapp, customEvent ->
-                    AlertDialog.Builder(this)
-                        .setMessage(customEvent.payload.toString())
-                        .setOnCancelListener {
-                            customEvent.errorType = "custom_error"
-                            miniapp.sendEvent(customEvent)
+        setContent {
+            MaterialTheme {
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    var currentLanguage by remember {
+                        mutableStateOf(Boxo.config.language)
+                    }
+                    MainScreen(
+                        currentLanguage = currentLanguage,
+                        onOpenMiniapp = { openDemoMiniapp() },
+                        onChangeLanguage = { language ->
+                            changeLanguage(language)
+                            currentLanguage = language
                         }
-                        .setPositiveButton(android.R.string.ok) { _, _ ->
-                            customEvent.payload = mapOf("custom_data_key" to "custom_data_value")
-                            miniapp.sendEvent(customEvent)
-                            miniapp.hideCustomActionMenuItem()
-                        }
-                        .show()
+                    )
                 }
-                .setPaymentEventListener { _, miniapp, paymentData ->
-                    //show payment dialog and send result
-                    miniapp.sendPaymentResult(paymentData.apply {
-                        this.status = "success"
-                        this.hostappOrderId = "123456"
-                    })
-                }
-                .setLifecycleListener(object : Miniapp.LifecycleListener {
-                    override fun onLaunch(miniapp: Miniapp) {
-                        Log.e("Demo Miniapp", "onLaunch ${miniapp.appId}")
-                    }
-
-                    override fun onResume(miniapp: Miniapp) {
-                        Log.e("Demo Miniapp", "onResume ${miniapp.appId}")
-                        miniapp.showCustomActionMenuItem()
-                    }
-
-                    override fun onUserInteraction(miniapp: Miniapp) {
-                    }
-
-                    override fun onPause(miniapp: Miniapp) {
-                        Log.e("Demo Miniapp", "onPause ${miniapp.appId}")
-                    }
-
-                    override fun onClose(miniapp: Miniapp) {
-                        Log.e("Demo Miniapp", "onClose ${miniapp.appId}")
-                    }
-
-                    override fun onError(miniapp: Miniapp, message: String) {
-                    }
-                })
-                .open()
+            }
         }
     }
 
+    private fun openDemoMiniapp() {
+        Boxo.getMiniapp("APP_ID")
+            .setConfig(MiniappConfig.Builder()
+                .saveState(false)
+                .build())
+            .setAuthListener { _, miniapp -> miniapp.setAuthCode("") }
+            .open()
+    }
+
+    private fun changeLanguage(language: String) {
+        Boxo.setConfig(Boxo.config
+            .toBuilder()
+            .setLanguage(language)
+            .build())
+    }
+}
+
+@Composable
+fun MainScreen(
+    currentLanguage: String?,
+    onOpenMiniapp: () -> Unit,
+    onChangeLanguage: (String) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.Top
+    ) {
+        Button(
+            onClick = onOpenMiniapp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 32.dp)
+        ) {
+            Text(text = "Open miniapp")
+        }
+
+        Text(
+            text = "Language: ${currentLanguage ?: ""}",
+            modifier = Modifier.padding(top = 24.dp)
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            OutlinedButton(
+                onClick = { onChangeLanguage("kk") },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(text = "Qazaq")
+            }
+            OutlinedButton(
+                onClick = { onChangeLanguage("en") },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(text = "English")
+            }
+        }
+    }
 }

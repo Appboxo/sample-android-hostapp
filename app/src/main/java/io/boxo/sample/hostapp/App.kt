@@ -10,7 +10,8 @@ class App : Application() {
         Boxo.init(this)
             .setConfig(
                 Config.Builder()
-                    .setClientId("BOXO_CLIENT_ID")
+                    .setClientId("CLIENT_ID")
+                    .setLanguage("en")
                     .setTheme(Config.Theme.SYSTEM)
                     .build()
             )
